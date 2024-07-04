@@ -13,16 +13,26 @@ import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 
 import Input from './Input';
+import { signin, signup } from '../../actions/auth';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import useStyles from './styles';
+
+const initialState = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};
 
 const Auth = () => {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
 
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState(initialState);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -30,23 +40,34 @@ const Auth = () => {
   const handleShowPassword = () =>
     setShowPassword((prevShowPassword) => !prevShowPassword);
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      dispatch(signup(formData, history));
+    } else {
+      dispatch(signin(formData, history));
+    }
+  };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
-    handleShowPassword(false);
+    setShowPassword(false);
   };
 
   const googleSuccess = async (res) => {
+    //needs to be validated-------------------------------:
     const decoded = jwt_decode(res.credential);
+    console.log(decoded);
     const result = {
       name: decoded?.given_name,
       email: decoded?.email,
       picture: decoded?.picture,
     };
-    const token = decoded?.jti;
+    const token = decoded?.sub;
 
     try {
       dispatch({ type: 'AUTH', data: { result, token } });
