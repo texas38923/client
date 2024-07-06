@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000' });
+const API = axios.create({ baseURL: `${window.location.origin}` });
 
 //to send the bearer token to the backend, attached with each and every request:
 API.interceptors.request.use((req) => {
