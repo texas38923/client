@@ -28,15 +28,15 @@ const Post = ({ post, setCurrentId }) => {
   const history = useHistory();
 
   const userId = user?.result.googleId || user?.result?._id;
-  const hasLikedPost = post.likes.find((like) => like === userId);
+  const hasLikedPost = likes.find((like) => like === userId);
 
   const handleLike = async () => {
     dispatch(likePost(post._id));
 
     if (hasLikedPost) {
-      setLikes(post.likes.filter((id) => id !== userId));
+      setLikes(likes.filter((id) => id !== userId));
     } else {
-      setLikes([...post.likes, userId]);
+      setLikes([...likes, userId]);
     }
   };
 
@@ -136,7 +136,7 @@ const Post = ({ post, setCurrentId }) => {
           user?.result?._id === post.creator) && (
           <Button
             size='small'
-            color='primary'
+            color='secondary'
             onClick={() => dispatch(deletePost(post._id))}
           >
             <DeleteIcon fontSize='small' />

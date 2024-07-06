@@ -8,6 +8,7 @@ import {
   UPDATE,
   DELETE,
   LIKE,
+  COMMENT,
 } from '../constants/actionTypes';
 
 //state --> posts -> has to be a default value, as cannot be null;
@@ -29,6 +30,17 @@ const reducer = (state = { isLoading: true, posts: [] }, action) => {
         posts: state.posts.map((post) =>
           post._id === action.payload._id ? action.payload : post
         ),
+      };
+    case COMMENT:
+      return {
+        ...state,
+        posts: state.posts.map((post) => {
+          //return all other posts normally, change the post which received a comment:
+          if (post._id === action.payload._id) {
+            return action.payload;
+          }
+          return post;
+        }),
       };
     case FETCH_ALL:
       return {
